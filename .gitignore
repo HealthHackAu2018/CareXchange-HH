@@ -1,0 +1,10 @@
+# Node Dependencies
+node_modules
+
+# Logs
+error.log
+combined.log
+
+# Dbs
+dump.rdp
+monogodb
