@@ -76,8 +76,8 @@ angular.module('Controllers',[])
 	};
 
 	function buildTypingMsg() {
+		console.log($scope.users);
 		if ($scope.typing.length == 0) $scope.typingMsg = "";
-
 		else {
 			var names = [];
 			for (var i = 0; i < $scope.typing.length; i++) {
@@ -104,6 +104,7 @@ angular.module('Controllers',[])
 	};
 	
 	$scope.socket.on("notifyTyping", function(data){
+		if (data == $rootScope.currentUser._id) return;
 		if (!$scope.typing.includes(data)) $scope.typing.push(data);
 		console.log($scope.typing);
 		buildTypingMsg();
@@ -123,19 +124,28 @@ angular.module('Controllers',[])
 	$scope.socket.on("updateUsersList", function(data){
 		console.log("USERS");
 		console.log(data);
-		$scope.title = data.title;
-		$scope.users = data.users;
-		for (var i = 0; i < data.prevMsgs.length; i++) {
-			var msg = data.prevMsgs[i];
-			if(msg.username == $rootScope.username){
-				msg.ownMsg = true;	
-			}else{
-				msg.ownMsg = false;
-			}
-			msg.msgTime = formatAMPM(new Date(msg.date));
-			$scope.messages.push(msg);
+		if (data.title) {
+			$scope.title = data.title;
+			$scope.users = data.users;
+			// for (var i = 0; i < data.users.length; i++){
+			// 	if ($scope.users.indexOf(data[i]) == -1) $scope.users.push(data[i]);
+			// }
+			if (data.prevMsgs){
+				for (var i = 0; i < data.prevMsgs.length; i++) {
+					var msg = data.prevMsgs[i];
+					if(msg.username == $rootScope.username){
+						msg.ownMsg = true;	
+					}else{
+						msg.ownMsg = false;
+					}
+					msg.msgTime = formatAMPM(new Date(msg.date));
+					$scope.messages.push(msg);
+				}
+			}		
 		}
+		//else if ($scope.users.indexOf(data) == -1) $scope.users.push(data);
 		$scope.$apply();
+		console.log($scope.users);
 	});
 
 // ================================== Common Functions ==================================    
@@ -194,10 +204,11 @@ angular.module('Controllers',[])
 			$scope.socket.emit("newMessage", $scope.teamId, { username : $rootScope.username, userPicture : $rootScope.userPicture, msg : $scope.chatMsg, hasMsg : $scope.isMsg , hasFile : $scope.isFileSelected , date: Date.now() }, function(data){
 				//delivery report code goes here
 				if (data.success == true) {
-					$scope.chatMsg = "";
 					$scope.setFocus = true;				
 				}
 			});
+			$scope.chatMsg = "";
+			$scope.textChanged();
 		}else{
 			$scope.isMsgBoxEmpty = true;
 		}		
