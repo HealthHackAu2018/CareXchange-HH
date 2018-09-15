@@ -49,18 +49,78 @@ angular.module('Controllers',[])
 	$scope.isMsg = false;
 	$scope.setFocus = true;
 	$scope.chatMsg = "";
+	$scope.typingMsg = "";
 	$scope.users = [];
+	$scope.typing = [];
 	$scope.messages = [];
+
 	
 	// redirection if user is not logged in.
 	if(!$rootScope.loggedIn){
 		$location.path('/login');
 	}
 
+// ====================================== XYZ is typing =================================
+	
+	$scope.textChanged = function() {
+		if ($scope.chatMsg.length > 0) emitTyping()
+		else emitEmpty();
+	};
+
+	function emitTyping() {
+		$scope.socket.emit('typing', $scope.teamId);
+	};
+
+	function emitEmpty() {
+		$scope.socket.emit('empty', $scope.teamId);
+	};
+
+	function buildTypingMsg() {
+		if ($scope.typing.length == 0) $scope.typingMsg = "";
+
+		else {
+			var names = [];
+			for (var i = 0; i < $scope.typing.length; i++) {
+				var userId = $scope.typing[i];
+				for (var j = 0; j < $scope.users.length; j++) {
+					var user = $scope.users[j];
+					console.log(user);
+					if (user._id == userId) names.push(user.username);
+				}
+			}
+			var suffix = " is typing";
+			var usersMsg = names[0];
+			if (names.length > 1) {
+				suffix = " are typing"; 
+				for (var i = 1; i < names.length-1; i++) {
+					usersMsg += ", " + names[i];
+				}
+				usersMsg += " and " + names[names.length-1];
+			}
+
+			$scope.typingMsg = usersMsg + suffix;
+		}
+		$scope.$apply();
+	};
+	
+	$scope.socket.on("notifyTyping", function(data){
+		if (!$scope.typing.includes(data)) $scope.typing.push(data);
+		console.log($scope.typing);
+		buildTypingMsg();
+	});
+
+	$scope.socket.on("notifyEmpty", function(data){
+		var index = $scope.typing.indexOf(data);
+		if (index > -1) {
+			$scope.typing.splice(index, 1);
+		}
+		buildTypingMsg();
+	});
+
 // ================================== Online Members List ===============================
 
 	$scope.socket.emit('join', $scope.teamId);
-	$scope.socket.on("updateUsersList", function(data){	
+	$scope.socket.on("updateUsersList", function(data){
 		console.log("USERS");
 		console.log(data);
 		$scope.title = data.title;

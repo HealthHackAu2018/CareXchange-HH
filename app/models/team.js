@@ -80,6 +80,7 @@ var getUsers = function(team, socket, callback){
 	});
 }
 
+
 /**
  * Remove a user along with the corresponding socket from a team
  *

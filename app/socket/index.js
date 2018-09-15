@@ -128,6 +128,20 @@ var ioEvents = function(io) {
 			});
 		});
 
+		// When a user is typing..
+		socket.on('typing', function(teamId, callback) {
+			var userId = socket.request.session.passport.user;
+			socket.emit('notifyTyping', userId);
+			socket.broadcast.to(teamId).emit('notifyTyping', userId);
+		});
+
+		// When a user is empty..
+		socket.on('empty', function(teamId, callback) {
+			var userId = socket.request.session.passport.user;
+			socket.emit('notifyEmpty', userId);
+			socket.broadcast.to(teamId).emit('notifyEmpty', userId);
+		});
+
 		// When a new message arrives
 		socket.on('newMessage', function(teamId, message, callback) {
 			if(message.hasMsg){
@@ -148,16 +162,14 @@ var ioEvents = function(io) {
 					socket.broadcast.to(teamId).emit('addDocMessage', message);
 					callback({success:true});
 				}
-				// cache message to redis, trim to 100 records only
-				var mId = "message_" + teamId;
-				Db.pubClient.lpush(mId, JSON.stringify(message));
-				Db.pubClient.ltrim(mId, 0, 99);
-				
 			}else{
 				callback({ success:false});
+				return;
 			}
-						
-			
+			// cache message to redis, trim to 100 records only
+			var mId = "message_" + teamId;
+			Db.pubClient.lpush(mId, JSON.stringify(message));
+			Db.pubClient.ltrim(mId, 0, 99);						
 		});
 
 	});

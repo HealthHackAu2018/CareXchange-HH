@@ -120,6 +120,7 @@
                 <div class="chat-box"></div>
               </div><!-- /.box-body -->
               <div class="box-footer">
+                <div><p class="user-typing">{{typingMsg}}</p></div>
                 <div class="box-tools pull-right desktop">
                   <!-- Any File Select Button -->
                   <button class="btn btn-success btn-flat" data-widget="" ngf-select ng-model="Files"><i class="glyphicon glyphicon-paperclip"></i></button>
@@ -127,7 +128,7 @@
                 <!-- Text message  -->
                 <form action="" method="post">
                   <div class="input-group">
-                    <input type="text" name="message" placeholder="Type Message ..." ng-class="{'form-control': true, 'has-error':isMsgBoxEmpty}" ng-model="chatMsg" ng-change="isMsgBoxEmpty=false" ng-enter="sendMsg()" ng-focus="setFocus" focus-me="setFocus"/>
+                    <input type="text" name="message" placeholder="Type Message ..." ng-class="{'form-control': true, 'has-error':isMsgBoxEmpty}" ng-model="chatMsg" ng-change="textChanged(); isMsgBoxEmpty=false" ng-enter="sendMsg()" ng-focus="setFocus" focus-me="setFocus"/>
                     <span class="input-group-btn">
                       <button type="button" class="btn btn-success btn-flat" ng-click="sendMsg()">Send</button>
                     </span>
