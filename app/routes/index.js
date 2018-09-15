@@ -30,7 +30,7 @@ router.get('/login', function(req, res, next) {
 // Login
 router.post('/login', passport.authenticate('local', { 
 	successRedirect: '/teams', 
-	failureRedirect: '/',
+	failureRedirect: '/login',
 	failureFlash: true
 }));
 
@@ -63,6 +63,8 @@ router.post('/register', function(req, res, next) {
 	}
 });
 
+
+
 // Social Authentication routes
 // 1. Login via Facebook
 router.get('/auth/facebook', passport.authenticate('facebook'));
@@ -88,45 +90,10 @@ router.get('/teams', [User.isAuthenticated, function(req, res, next) {
 	});
 }]);
 
-// Team 
-router.get('/team/:id', [User.isAuthenticated, function(req, res, next) {
-	var teamId = req.params.id;
-
-	function msgDate(a,b) {
-		var aObj = JSON.parse(a);
-		var bObj = JSON.parse(b);
-		if (aObj.date < bObj.date)
-		  return -1;
-		if (aObj.date > bObj.date)
-		  return 1;
-		return 0;
-	  }
-
-	Team.findById(teamId, function(err, team){
-		if(err) throw err;
-		if(!team){
-			return next(); 
-		}
-		// Get the 100 most recent messages from Redis
-		var mId = "message_" + teamId;
-		Db.pubClient.lrange(mId, 0, 99, function(err, reply) {
-			if(!err) {
-				var result = [];
-				reply.sort(msgDate);
-				// Loop through the list, parsing each item into an object
-				for(var message in reply){
-					message = JSON.parse(reply[message]);
-					message.date      = (new Date(message.date)).toLocaleString();
-      				message.username  = message.username;
-      				message.content   = message.content;
-					result.push(message);
-				}
-				return res.render('teamchat', { user: req.user, team: team, messages: result });
-			}
-		});
-		
-	});
-}]);
+// Privacy policy
+router.get('/privacy', function(req, res, next) {
+	res.render('privacy', {  });
+});
 
 // Logout
 router.get('/logout', function(req, res, next) {
