@@ -63,8 +63,6 @@ router.post('/register', function(req, res, next) {
 	}
 });
 
-
-
 // Social Authentication routes
 // 1. Login via Facebook
 router.get('/auth/facebook', passport.authenticate('facebook'));
@@ -83,9 +81,8 @@ router.get('/auth/twitter/callback', passport.authenticate('twitter', {
 }));
 
 // 3. Login via Google
-router.get('/auth/google', passport.authenticate('google'));
-router.get('/auth/google/callback', passport.authenticate('google', { scope: [
-	'https://www.googleapis.com/auth/plus.login'],
+router.get('/auth/google', passport.authenticate('google', {scope: ['https://www.googleapis.com/auth/plus.login']}));
+router.get('/auth/google/callback', passport.authenticate('google', {
 	successRedirect: '/teams',
 	failureRedirect: '/login',
 	failureFlash: true

@@ -60,10 +60,18 @@ var init = function(){
 		});
 	};
 
+	var verifyGoogleAccount = function(request, accessToken, refreshToken, profile, done) {
+		console.log(profile);
+		User.findOrCreate(profile, function (err, user) {
+			if (err) { return done(err); }
+		return done(err, user); 
+	});
+};
+
 	// Plug-in Facebook & Twitter Strategies
 	passport.use(new FacebookStrategy(config.facebook, verifySocialAccount));
 	passport.use(new TwitterStrategy(config.twitter, verifySocialAccount));
-	passport.use(new GoogleStrategy(config.google, verifySocialAccount));
+	passport.use(new GoogleStrategy(config.google, verifyGoogleAccount));
 
 	return passport;
 }
