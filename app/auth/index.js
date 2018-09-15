@@ -7,7 +7,7 @@ var logger 		= require('../logger');
 var LocalStrategy 		= require('passport-local').Strategy;
 var FacebookStrategy  	= require('passport-facebook').Strategy;
 var TwitterStrategy  	= require('passport-twitter').Strategy;
-var GoogleStrategy = require('passport-google-oauth').OAuthStrategy;
+var GoogleStrategy = require( 'passport-google-oauth2' ).Strategy;
 
 var User = require('../models/user');
 
