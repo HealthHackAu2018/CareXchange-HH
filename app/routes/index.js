@@ -69,25 +69,26 @@ router.post('/register', function(req, res, next) {
 // 1. Login via Facebook
 router.get('/auth/facebook', passport.authenticate('facebook'));
 router.get('/auth/facebook/callback', passport.authenticate('facebook', {
-		successRedirect: '/teams',
-		failureRedirect: '/login',
-		failureFlash: true
+	successRedirect: '/teams',
+	failureRedirect: '/login',
+	failureFlash: true
 }));
 
 // 2. Login via Twitter
 router.get('/auth/twitter', passport.authenticate('twitter'));
 router.get('/auth/twitter/callback', passport.authenticate('twitter', {
-		successRedirect: '/teams',
-		failureRedirect: '/login',
-		failureFlash: true
+	successRedirect: '/teams',
+	failureRedirect: '/login',
+	failureFlash: true
 }));
 
 // 3. Login via Google
 router.get('/auth/google', passport.authenticate('google'));
-router.get('/auth/google/callback', passport.authenticate('google', {
-		successRedirect: '/teams',
-		failureRedirect: '/login',
-		failureFlash: true
+router.get('/auth/google/callback', passport.authenticate('google', { scope: [
+	'https://www.googleapis.com/auth/plus.login'],
+	successRedirect: '/teams',
+	failureRedirect: '/login',
+	failureFlash: true
 }));
 
 // Teams
