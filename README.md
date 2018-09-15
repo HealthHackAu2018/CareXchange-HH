@@ -1,0 +1,1 @@
+conda create -n carex -c conda-forge nodejs redis mongodb

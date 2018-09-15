@@ -7,4 +7,4 @@ combined.log
 
 # Dbs
 dump.rdp
-monogodb
+mongodb/
