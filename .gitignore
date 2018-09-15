@@ -8,3 +8,6 @@ combined.log
 # Dbs
 dump.rdp
 mongodb/
+
+#configs
+app/config/config.json
