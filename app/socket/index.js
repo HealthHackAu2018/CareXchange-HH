@@ -55,7 +55,7 @@ var ioEvents = function(io) {
 				if(!team){
 					// Assuming that you already checked in router that team chat exists
 					// Then, if a team doesn't exist here, return an error to inform the client-side.
-					socket.emit('updateUsersList', { error: 'Team doesnt exist.' });
+					socket.emit('updateUsersList', { error: 'Team doesn\'t exist.' });
 				} else {
 					// Check if user exists in the session
 					if(socket.request.session.passport == null){
@@ -90,14 +90,20 @@ var ioEvents = function(io) {
 									data.prevMsgs = result;
 									data.title = team.title;
 									socket.emit('updateUsersList', data, true);
+									// add
+									data.prevMsgs = [];
+									socket.broadcast.to(newTeam.id).emit('updateUsersList', data);
 								}
 							});
 							
 							// Return the current user to other connecting sockets in the team 
 							// ONLY if the user wasn't connected already to the current team
-							if(currentUserInTeam === 1){
-								socket.broadcast.to(newTeam.id).emit('updateUsersList', users[users.length - 1]);
-							}
+							// if(currentUserInTeam === 1){
+							// 	var data = {};
+							// 	data.users = users[users.length - 1];
+							// 	data.title = team.title;
+							// 	socket.broadcast.to(newTeam.id).emit('updateUsersList', data);
+							//}
 						});
 					});
 				}
@@ -128,6 +134,20 @@ var ioEvents = function(io) {
 			});
 		});
 
+		// When a user is typing..
+		socket.on('typing', function(teamId, callback) {
+			var userId = socket.request.session.passport.user;
+			socket.emit('notifyTyping', userId);
+			socket.broadcast.to(teamId).emit('notifyTyping', userId);
+		});
+
+		// When a user is empty..
+		socket.on('empty', function(teamId, callback) {
+			var userId = socket.request.session.passport.user;
+			socket.emit('notifyEmpty', userId);
+			socket.broadcast.to(teamId).emit('notifyEmpty', userId);
+		});
+
 		// When a new message arrives
 		socket.on('newMessage', function(teamId, message, callback) {
 			if(message.hasMsg){
@@ -150,12 +170,12 @@ var ioEvents = function(io) {
 				}
 			}else{
 				callback({ success:false});
+				return;
 			}
-						
 			// cache message to redis, trim to 100 records only
 			var mId = "message_" + teamId;
 			Db.pubClient.lpush(mId, JSON.stringify(message));
-			Db.pubClient.ltrim(mId, 0, 99);
+			Db.pubClient.ltrim(mId, 0, 99);						
 		});
 
 	});

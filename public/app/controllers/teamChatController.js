@@ -49,33 +49,103 @@ angular.module('Controllers',[])
 	$scope.isMsg = false;
 	$scope.setFocus = true;
 	$scope.chatMsg = "";
+	$scope.typingMsg = "";
 	$scope.users = [];
+	$scope.typing = [];
 	$scope.messages = [];
+
 	
 	// redirection if user is not logged in.
 	if(!$rootScope.loggedIn){
 		$location.path('/login');
 	}
 
+// ====================================== XYZ is typing =================================
+	
+	$scope.textChanged = function() {
+		if ($scope.chatMsg.length > 0) emitTyping()
+		else emitEmpty();
+	};
+
+	function emitTyping() {
+		$scope.socket.emit('typing', $scope.teamId);
+	};
+
+	function emitEmpty() {
+		$scope.socket.emit('empty', $scope.teamId);
+	};
+
+	function buildTypingMsg() {
+		console.log($scope.users);
+		if ($scope.typing.length == 0) $scope.typingMsg = "";
+		else {
+			var names = [];
+			for (var i = 0; i < $scope.typing.length; i++) {
+				var userId = $scope.typing[i];
+				for (var j = 0; j < $scope.users.length; j++) {
+					var user = $scope.users[j];
+					console.log(user);
+					if (user._id == userId) names.push(user.username);
+				}
+			}
+			var suffix = " is typing";
+			var usersMsg = names[0];
+			if (names.length > 1) {
+				suffix = " are typing"; 
+				for (var i = 1; i < names.length-1; i++) {
+					usersMsg += ", " + names[i];
+				}
+				usersMsg += " and " + names[names.length-1];
+			}
+
+			$scope.typingMsg = usersMsg + suffix;
+		}
+		$scope.$apply();
+	};
+	
+	$scope.socket.on("notifyTyping", function(data){
+		if (data == $rootScope.currentUser._id) return;
+		if (!$scope.typing.includes(data)) $scope.typing.push(data);
+		console.log($scope.typing);
+		buildTypingMsg();
+	});
+
+	$scope.socket.on("notifyEmpty", function(data){
+		var index = $scope.typing.indexOf(data);
+		if (index > -1) {
+			$scope.typing.splice(index, 1);
+		}
+		buildTypingMsg();
+	});
+
 // ================================== Online Members List ===============================
 
 	$scope.socket.emit('join', $scope.teamId);
-	$scope.socket.on("updateUsersList", function(data){	
+	$scope.socket.on("updateUsersList", function(data){
 		console.log("USERS");
 		console.log(data);
-		$scope.title = data.title;
-		$scope.users = data.users;
-		for (var i = 0; i < data.prevMsgs.length; i++) {
-			var msg = data.prevMsgs[i];
-			if(msg.username == $rootScope.username){
-				msg.ownMsg = true;	
-			}else{
-				msg.ownMsg = false;
-			}
-			msg.msgTime = formatAMPM(new Date(msg.date));
-			$scope.messages.push(msg);
+		if (data.title) {
+			$scope.title = data.title;
+			$scope.users = data.users;
+			// for (var i = 0; i < data.users.length; i++){
+			// 	if ($scope.users.indexOf(data[i]) == -1) $scope.users.push(data[i]);
+			// }
+			if (data.prevMsgs){
+				for (var i = 0; i < data.prevMsgs.length; i++) {
+					var msg = data.prevMsgs[i];
+					if(msg.username == $rootScope.username){
+						msg.ownMsg = true;	
+					}else{
+						msg.ownMsg = false;
+					}
+					msg.msgTime = formatAMPM(new Date(msg.date));
+					$scope.messages.push(msg);
+				}
+			}		
 		}
+		//else if ($scope.users.indexOf(data) == -1) $scope.users.push(data);
 		$scope.$apply();
+		console.log($scope.users);
 	});
 
 // ================================== Common Functions ==================================    
@@ -134,10 +204,11 @@ angular.module('Controllers',[])
 			$scope.socket.emit("newMessage", $scope.teamId, { username : $rootScope.username, userPicture : $rootScope.userPicture, msg : $scope.chatMsg, hasMsg : $scope.isMsg , hasFile : $scope.isFileSelected , date: Date.now() }, function(data){
 				//delivery report code goes here
 				if (data.success == true) {
-					$scope.chatMsg = "";
 					$scope.setFocus = true;				
 				}
 			});
+			$scope.chatMsg = "";
+			$scope.textChanged();
 		}else{
 			$scope.isMsgBoxEmpty = true;
 		}		
