@@ -70,7 +70,7 @@ router.post('/register', function(req, res, next) {
 router.get('/auth/facebook', passport.authenticate('facebook'));
 router.get('/auth/facebook/callback', passport.authenticate('facebook', {
 		successRedirect: '/teams',
-		failureRedirect: '/',
+		failureRedirect: '/login',
 		failureFlash: true
 }));
 
@@ -78,7 +78,15 @@ router.get('/auth/facebook/callback', passport.authenticate('facebook', {
 router.get('/auth/twitter', passport.authenticate('twitter'));
 router.get('/auth/twitter/callback', passport.authenticate('twitter', {
 		successRedirect: '/teams',
-		failureRedirect: '/',
+		failureRedirect: '/login',
+		failureFlash: true
+}));
+
+// 3. Login via Google
+router.get('/auth/google', passport.authenticate('google'));
+router.get('/auth/google/callback', passport.authenticate('google', {
+		successRedirect: '/teams',
+		failureRedirect: '/login',
 		failureFlash: true
 }));
 

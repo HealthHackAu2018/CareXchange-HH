@@ -148,14 +148,16 @@ var ioEvents = function(io) {
 					socket.broadcast.to(teamId).emit('addDocMessage', message);
 					callback({success:true});
 				}
+				// cache message to redis, trim to 100 records only
+				var mId = "message_" + teamId;
+				Db.pubClient.lpush(mId, JSON.stringify(message));
+				Db.pubClient.ltrim(mId, 0, 99);
+				
 			}else{
 				callback({ success:false});
 			}
 						
-			// cache message to redis, trim to 100 records only
-			var mId = "message_" + teamId;
-			Db.pubClient.lpush(mId, JSON.stringify(message));
-			Db.pubClient.ltrim(mId, 0, 99);
+			
 		});
 
 	});
