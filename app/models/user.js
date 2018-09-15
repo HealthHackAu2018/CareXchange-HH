@@ -15,7 +15,6 @@ var findById = function (id, callback){
 	userModel.findById(id, callback);
 }
 
-
 /**
  * Find a user, and create one if doesn't exist already.
  * This method is used ONLY to find user accounts registered via Social Authentication.

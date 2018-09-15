@@ -7,10 +7,14 @@ var formidable = require('formidable');
 
 var User = require('../models/user');
 var Team = require('../models/team');
-var Db = require('../database');
+var Upload = require('../models/upload');
 
 var files_array  = [];
 var expiryTime = 8;
+
+Upload.find({}, function(err, uploads) {
+	files_array = uploads;
+});
 
 // Home page
 router.get('/login', function(req, res, next) {
@@ -121,19 +125,20 @@ router.get("/loggedin", function(req, res) {
 // route for uploading images asynchronously
 router.post('/v1/uploadImage',function (req, res){
 	var imgdatetimenow = Date.now();
+	var base_pub = '/app/upload/images';
 	var form = new formidable.IncomingForm({
-		uploadDir: __dirname + '../../../public/app/upload/images',
+		uploadDir: __dirname + '../../../public' + base_pub,
 		keepExtensions: true
 	});
 
 	form.on('end', function() {
-	res.end();
+	//res.end();
 	});
 	
 	form.parse(req,function(err,fields,files){
 		var data = { 
 				username : fields.username, 
-				userAvatar : fields.userAvatar, 
+				userPicture : fields.userPicture, 
 				repeatMsg : true, 
 				hasFile : fields.hasFile, 
 				isImageFile : fields.isImageFile, 
@@ -141,8 +146,9 @@ router.post('/v1/uploadImage',function (req, res){
 				showme : fields.showme, 
 				dwimgsrc : fields.dwimgsrc, 
 				dwid : fields.dwid,
-				serverfilename : baseName(files.file.path), 
-				msgTime : fields.msgTime,
+				serverfilename : base_pub + '/' + baseName(files.file.path), 
+				teamModel : fields.teamModel,
+				date : fields.date,
 				filename : files.file.name,
 				size : bytesToSize(files.file.size)
 		};
@@ -150,25 +156,26 @@ router.post('/v1/uploadImage',function (req, res){
 				dwid : fields.dwid,
 				filename : files.file.name,
 				filetype : fields.istype,
-				serverfilename : baseName(files.file.path),
+				serverfilename : base_pub + '/' + baseName(files.file.path),
 				serverfilepath : files.file.path,
 				expirytime : imgdatetimenow + (3600000 * expiryTime)           
 		};
+		Upload.create(image_file);
 		files_array.push(image_file);
-		socket.emit('addImageMessage', data);
+		return res.send(data);
 	});
   });
   
   // route for uploading audio asynchronously
   router.post('/v1/uploadAudio',function (req, res){
-	  var userName, useravatar, hasfile, ismusicfile, isType, showMe, DWimgsrc, DWid, msgtime;
+	  var userName, useravatar, hasfile, isaudiofile, isType, showMe, DWimgsrc, DWid, msgtime;
 	  var imgdatetimenow = Date.now();
+	  var base_pub = '/app/upload/audio';
 	  var form = new formidable.IncomingForm({
-			uploadDir: __dirname + '../../../public/app/upload/music',
+			uploadDir: __dirname + '../../../public' + base_pub,
 			keepExtensions: true
 		});
-  
-  
+    
 	  form.on('end', function() {
 		res.end();
 	  });
@@ -180,12 +187,12 @@ router.post('/v1/uploadImage',function (req, res){
 				  userAvatar : fields.userAvatar, 
 				  repeatMsg : true, 
 				  hasFile : fields.hasFile, 
-				  isMusicFile : fields.isMusicFile, 
+				  isAudioFile : fields.isAudioFile, 
 				  istype : fields.istype, 
 				  showme : fields.showme, 
 				  dwimgsrc : fields.dwimgsrc, 
 				  dwid : fields.dwid,
-				  serverfilename : baseName(files.file.path), 
+				  serverfilename : base_pub + '/' + baseName(files.file.path), 
 				  msgTime : fields.msgTime,
 				  filename : files.file.name,
 				  size : bytesToSize(files.file.size)
@@ -194,20 +201,21 @@ router.post('/v1/uploadImage',function (req, res){
 				  dwid : fields.dwid,
 				  filename : files.file.name,
 				  filetype : fields.istype,
-				  serverfilename : baseName(files.file.path),
+				  serverfilename : base_pub + '/' + baseName(files.file.path),
 				  serverfilepath : files.file.path,
 				  expirytime : imgdatetimenow + (3600000 * expiryTime)           
 		  };
 		  files_array.push(audio_file);
-		  ios.sockets.emit('new message music', data);
+		  res.send(data);
 	  });
   });
   
   // route for uploading document asynchronously
   router.post('/v1/uploadPDF',function (req, res){
 	  var imgdatetimenow = Date.now();
+	  var base_pub = '/app/upload/doc';
 	  var form = new formidable.IncomingForm({
-			uploadDir: __dirname + '../../../public/app/upload/doc',
+			uploadDir: __dirname + '../../../public' + base_pub,
 			keepExtensions: true
 		});
   
@@ -225,7 +233,7 @@ router.post('/v1/uploadImage',function (req, res){
 				  showme : fields.showme, 
 				  dwimgsrc : fields.dwimgsrc, 
 				  dwid : fields.dwid,
-				  serverfilename : baseName(files.file.path), 
+				  serverfilename : base_pub + '/' + baseName(files.file.path), 
 				  msgTime : fields.msgTime,
 				  filename : files.file.name,
 				  size : bytesToSize(files.file.size)
@@ -234,12 +242,12 @@ router.post('/v1/uploadImage',function (req, res){
 				  dwid : fields.dwid,
 				  filename : files.file.name,
 				  filetype : fields.istype,
-				  serverfilename : baseName(files.file.path),
+				  serverfilename : base_pub + '/' + baseName(files.file.path),
 				  serverfilepath : files.file.path,
 				  expirytime : imgdatetimenow + (3600000 * expiryTime)           
 		  };
 		  files_array.push(pdf_file);
-		  ios.sockets.emit('new message PDF', data);
+		  res.send(data);
 	  });
   });
   
@@ -267,7 +275,7 @@ router.post('/v1/uploadImage',function (req, res){
 		  {
 			  var deletedfileinfo = { 
 				  isExpired : true,
-				  expmsg : "File has beed removed."
+				  expmsg : "File has expired."
 				  };
 				  fs.unlink(req_file_data.serverfilepath, function(err){
 						 if (err) {
@@ -289,7 +297,7 @@ router.post('/v1/uploadImage',function (req, res){
 			  // CASE 4 : File Doesn't Exists.       
 			  var deletedfileinfo = { 
 					  isExpired : true,
-					  expmsg : "File has beed removed."
+					  expmsg : "File has been removed."
 			  };
 			  res.send(deletedfileinfo);       
 		  }

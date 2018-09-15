@@ -159,7 +159,7 @@ var ioEvents = function(io) {
 					socket.emit('addImageMessage', message);
 					socket.broadcast.to(teamId).emit('addImageMessage', message);
 					callback({success:true});
-				} else if(message.istype == "music"){
+				} else if(message.istype == "audio"){
 					socket.emit('addAudioMessage', message);
 					socket.broadcast.to(teamId).emit('addAudioMessage', message);
 					callback({success:true});

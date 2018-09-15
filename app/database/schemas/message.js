@@ -3,7 +3,7 @@
 var Mongoose  = require('mongoose');
 
 /**
- * 
+ * Message schema
  */
 var MessageSchema = new Mongoose.Schema({
     teamId: { type: String, required: true },

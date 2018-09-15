@@ -4,7 +4,8 @@
     "@bower_components/angular-resource": "angular/bower-angular-resource#~1.4.1",
     "@bower_components/angular-route": "angular/bower-angular-route#~1.4.1",
     "@bower_components/jquery": "jquery/jquery-dist#~2",
-    "@bower_components/lightbox2": "lokesh/lightbox2#~2.8.1"
+    "@bower_components/lightbox2": "lokesh/lightbox2#~2.8.1",
+    "angular-ui-bootstrap": "^2.5.6"
   },
   "engines": {
     "yarn": ">= 1.0.0"
