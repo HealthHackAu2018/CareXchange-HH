@@ -39,6 +39,7 @@ module.exports = { Mongoose, pubClient, subClient,
 	models: {
 		user: require('./schemas/user.js'),
 		team: require('./schemas/team'),
-		message: require('./schemas/message.js')
+		message: require('./schemas/message.js'),
+		upload: require('./schemas/upload')
 	}
 };

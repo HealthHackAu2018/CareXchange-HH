@@ -50,6 +50,7 @@ angular.module('Controllers',[])
 	$scope.setFocus = true;
 	$scope.chatMsg = "";
 	$scope.typingMsg = "";
+	$scope.teamModel = "Social";
 	$scope.users = [];
 	$scope.typing = [];
 	$scope.messages = [];
@@ -59,6 +60,10 @@ angular.module('Controllers',[])
 	if(!$rootScope.loggedIn){
 		$location.path('/login');
 	}
+
+	$scope.updateMode = function() {
+		console.log($scope.teamModel);
+	};
 
 // ====================================== XYZ is typing =================================
 	
@@ -201,7 +206,7 @@ angular.module('Controllers',[])
 			$scope.isFileSelected = false;
 			$scope.isMsg = true;
 			//var dateString = formatAMPM(new Date());
-			$scope.socket.emit("newMessage", $scope.teamId, { username : $rootScope.username, userPicture : $rootScope.userPicture, msg : $scope.chatMsg, hasMsg : $scope.isMsg , hasFile : $scope.isFileSelected , date: Date.now() }, function(data){
+			$scope.socket.emit("newMessage", $scope.teamId, { username : $rootScope.username, userPicture : $rootScope.userPicture, msg : $scope.chatMsg, hasMsg : $scope.isMsg , hasFile : $scope.isFileSelected , teamModel : $scope.teamModel, date: Date.now() }, function(data){
 				//delivery report code goes here
 				if (data.success == true) {
 					$scope.setFocus = true;				
@@ -236,21 +241,25 @@ angular.module('Controllers',[])
 
     //  opens the sent image on gallery_icon click
     $scope.openClickImage = function(msg){
+		console.log("boop");
 		if(!msg.ownMsg){
-		$http.post($rootScope.baseUrl + "/v1/getfile",msg).success(function (response){
-	    	if(!response.isExpired){
-	    		msg.showme = false;
-	    		msg.serverfilename = msg.serverfilename;
-	    	}else{
-	    		var html = '<p id="alert">'+ response.expmsg +'</p>';
-	    		if ($( ".chat-box" ).has( "p" ).length < 1) {
-					$(html).hide().prependTo(".chat-box").fadeIn(1500);
-					$('#alert').delay(1000).fadeOut('slow', function(){
-						$('#alert').remove();
-					});
+			console.log("beep");
+			$http.post($rootScope.baseUrl + "/v1/getfile",msg).success(function (response){
+				console.log("getfile resp");
+				console.log(response);
+				if(!response.isExpired){
+					msg.showme = false;
+					msg.serverfilename = msg.serverfilename;
+				}else{
+					var html = '<p id="alert">'+ response.expmsg +'</p>';
+					if ($( ".chat-box" ).has( "p" ).length < 1) {
+						$(html).hide().prependTo(".chat-box").fadeIn(1500);
+						$('#alert').delay(1000).fadeOut('slow', function(){
+							$('#alert').remove();
+						});
+					}
 				}
-	    	}
-	    });	
+			});	
 		}
     };
     
@@ -307,12 +316,15 @@ angular.module('Controllers',[])
 
 	// download image if it exists on server else return error message
 	$scope.downloadImage = function(ev, elem){
+		console.log("download beep");
 		var search_id = elem.id;
     	for (var i = ($scope.messages.length-1); i >= 0 ; i--) {
 			if($scope.messages[i].hasFile){
 				if ($scope.messages[i].istype === "image") {
 					if($scope.messages[i].dwid === search_id){
 						$http.post($rootScope.baseUrl + "/v1/getfile",$scope.messages[i]).success(function (response){
+							console.log(response);
+							console.log(search_id);
 					    	if(!response.isExpired){
 					    		var linkID = "#" + search_id + "A";
 					    		$(linkID).find('i').click();
@@ -354,7 +366,7 @@ angular.module('Controllers',[])
 			      		dwid : DWid, 
 			      		msgTime : dateString			      		
 			    };
-                $scope.socket.emit('send-message',image,function (data){       // sending new image message via socket    
+                $scope.socket.emit('newMessage',$scope.teamId,image,function (data){       // sending new image message via socket    
                 });
                 var fd = new FormData();
     			fd.append('file', file);
@@ -372,6 +384,7 @@ angular.module('Controllers',[])
 		            transformRequest: angular.identity,
 		            headers: { 'Content-Type': undefined }
 		        }).then(function (response) {
+					checkmessagesImage(response);
 		        });
 
             }
@@ -379,12 +392,12 @@ angular.module('Controllers',[])
     };
 
 // =========================================== Audio Sending Code =====================
-    $scope.$watch('musicFiles', function () {
-        $scope.sendAudio($scope.musicFiles);
+    $scope.$watch('audioFiles', function () {
+        $scope.sendAudio($scope.audioFiles);
     });
 
-    //  opens the sent music file on music_icon click on new window
-    $scope.openClickMusic = function(msg){
+    //  opens the sent audio file on audio_icon click on new window
+    $scope.openClickAudio = function(msg){
     	$http.post($rootScope.baseUrl + "/v1/getfile",msg).success(function (response){
 	    	if(!response.isExpired){
 	    		window.open($rootScope.baseUrl +'/'+response.serverfilename, "_blank");
@@ -400,7 +413,7 @@ angular.module('Controllers',[])
 	    });	
 	}
 
-	// recieving new music message
+	// recieving new audio message
     $scope.socket.on("addAudioMessage", function(data){
 		if(data.username == $rootScope.username){
 			data.ownMsg = true;
@@ -409,23 +422,23 @@ angular.module('Controllers',[])
 			data.ownMsg = false;
 		}
 		if((data.username == $rootScope.username) && data.repeatMsg){	
-			checkmessagesMusic(data);
+			checkmessagesAudio(data);
 		}else{
 			$scope.messages.push(data);
 		}
 	});
 
-	// replacing spinning wheel in sender message after music message delivered to everyone.
-	function checkmessagesMusic(msg){
+	// replacing spinning wheel in sender message after audio message delivered to everyone.
+	function checkmessagesAudio(msg){
 		for (var i = ($scope.messages.length-1); i >= 0 ; i--) {
 			if($scope.messages[i].hasFile){
-				if ($scope.messages[i].istype === "music") {					
+				if ($scope.messages[i].istype === "audio") {					
 					if($scope.messages[i].dwid === msg.dwid){
 						$scope.messages[i].showme = true;
 						$scope.messages[i].serverfilename = msg.serverfilename;
 						$scope.messages[i].filename = msg.filename;
 						$scope.messages[i].size = msg.size;
-						$scope.messages[i].dwimgsrc = "app/images/musicplay_icon.png";
+						$scope.messages[i].dwimgsrc = "app/images/audioplay_icon.png";
 						break;	
 					}
 				}						
@@ -433,12 +446,12 @@ angular.module('Controllers',[])
 		};
 	}
 
-	// download music file if it exists on server else return error message
-	$scope.downloadMusic = function(ev, elem){
+	// download audio file if it exists on server else return error message
+	$scope.downloadAudio = function(ev, elem){
 		var search_id = elem.id;
     	for (var i = ($scope.messages.length-1); i >= 0 ; i--) {
 			if($scope.messages[i].hasFile){
-				if ($scope.messages[i].istype === "music") {
+				if ($scope.messages[i].istype === "audio") {
 					if($scope.messages[i].dwid === search_id){
 						$http.post($rootScope.baseUrl + "/v1/getfile",$scope.messages[i]).success(function (response){
 					    	if(!response.isExpired){
@@ -463,7 +476,7 @@ angular.module('Controllers',[])
 		};
     }
 
-    // validate file type to 'music file' function
+    // validate file type to 'audio file' function
 	$scope.validateMP3 = function(file){
 		if (file.type == "audio/mp3" || file.type == "audio/mpeg") {
 			return true;
@@ -479,7 +492,7 @@ angular.module('Controllers',[])
 		}
 	}    
 
-	// sending new 'music file' function
+	// sending new 'audio file' function
     $scope.sendAudio = function (files) {
         if (files && files.length) {
         	$scope.isFileSelected = true;
@@ -491,25 +504,25 @@ angular.module('Controllers',[])
                 		username : $rootScope.username, 
 			      		userAvatar : $rootScope.userAvatar, 
 			      		hasFile : $scope.isFileSelected ,
-			      		isMusicFile : true,
-                		istype : "music",
+			      		isAudioFile : true,
+                		istype : "audio",
                 		showme : false,
-                		dwimgsrc : "app/images/musicplay_icon.png", 
+                		dwimgsrc : "app/images/audioplay_icon.png", 
 			      		dwid : DWid, 
                 		msgTime : dateString
                 }		
 
-                $scope.socket.emit('send-message',audio,function (data){		// sending new image message via socket
+                $scope.socket.emit('newMessage',$scope.teamId,audio,function (data){		// sending new image message via socket
                 });
                 var fd = new FormData();
     			fd.append('file', file);
         		fd.append('username', $rootScope.username);
         		fd.append('userAvatar', $rootScope.userAvatar);
         		fd.append('hasFile', $scope.isFileSelected);
-        		fd.append('isMusicFile', true);
-				fd.append('istype', "music");        		
+        		fd.append('isAudioFile', true);
+				fd.append('istype', "audio");        		
 				fd.append('showme', false);
-				fd.append('dwimgsrc', "app/images/musicplay_icon.png");
+				fd.append('dwimgsrc', "app/images/audioplay_icon.png");
 				fd.append('dwid', DWid);
 				fd.append('msgTime', dateString);
 				fd.append('filename', file.name);
@@ -517,6 +530,7 @@ angular.module('Controllers',[])
 		            transformRequest: angular.identity,
 		            headers: { 'Content-Type': undefined }
 		        }).then(function (response) {
+					//$scope.socket.emit("newMessage", data);
 		        });    
             }
         }
@@ -643,7 +657,7 @@ angular.module('Controllers',[])
 			      		dwid : DWid, 
                 		msgTime : dateString
                 }
-                $scope.socket.emit('send-message',PDF,function (data){
+                $scope.socket.emit('newMessage',$scope.teamId,PDF,function (data){
                 });
                 var fd = new FormData();
     			fd.append('file', file);
@@ -672,7 +686,7 @@ angular.module('Controllers',[])
         var filetype = $scope.catchFile($scope.Files);
         if(filetype == "document"){
         	$scope.sendPDF($scope.Files);
-        }else if(filetype == "music"){
+        }else if(filetype == "audio"){
         	$scope.sendAudio($scope.Files);
         }else if(filetype == "image"){
         	$scope.sendImage($scope.Files);
@@ -696,7 +710,7 @@ angular.module('Controllers',[])
                 if (file.type == "application/pdf" || file.type == "application/msword" || file.type == "application/vnd.openxmlformats-officedocument.wordprocessingml.document" || file.type == "text/plain" || file.type == "application/vnd.ms-excel") {
 					return "document";
 				}else if(file.type == "audio/mp3" || file.type == "audio/mpeg"){
-					return "music";
+					return "audio";
 				}else{
 					var filetype = file.type.substring(0,file.type.indexOf('/'));
 					if (filetype == "image") {
