@@ -11,3 +11,4 @@ mongodb/
 
 #configs
 app/config/config.json
+package-lock.json
