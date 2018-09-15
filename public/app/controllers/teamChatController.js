@@ -206,10 +206,16 @@ angular.module('Controllers',[])
 			$scope.isFileSelected = false;
 			$scope.isMsg = true;
 			//var dateString = formatAMPM(new Date());
-			$scope.socket.emit("newMessage", $scope.teamId, { username : $rootScope.username, userPicture : $rootScope.userPicture, msg : $scope.chatMsg, hasMsg : $scope.isMsg , hasFile : $scope.isFileSelected , teamModel : $scope.teamModel, date: Date.now() }, function(data){
-				//delivery report code goes here
-				if (data.success == true) {
-					$scope.setFocus = true;				
+			$scope.socket.emit("newMessage", $scope.teamId, { 
+				username : $rootScope.username, 
+				userPicture : $rootScope.userPicture, 
+				msg : $scope.chatMsg, 
+				hasMsg : $scope.isMsg , 
+				hasFile : $scope.isFileSelected , 
+				teamModel : $scope.teamModel, 
+				date: Date.now() }, function(data){
+					if (data.success == true) {
+						$scope.setFocus = true;				
 				}
 			});
 			$scope.chatMsg = "";
@@ -266,14 +272,17 @@ angular.module('Controllers',[])
     // recieving new image message
     $scope.socket.on("addImageMessage", function(data){
 		$scope.showme = true;
+		data.msgTime = formatAMPM(new Date(data.date));
 		if(data.username == $rootScope.username){
-			data.ownMsg = true;	
-			data.dwimgsrc = "app/images/spin.gif";	
+			//data.ownMsg = true;	
+			data.ownMsg = false;
+			//data.dwimgsrc = "app/images/spin.gif";	
 		}else{
 			data.ownMsg = false;
 		}
 		if((data.username == $rootScope.username) && data.repeatMsg){
-			checkmessagesImage(data);
+			//checkmessagesImage(data);
+			$scope.messages.push(data);
 		}else{
 			$scope.messages.push(data);
 		}
@@ -353,40 +362,32 @@ angular.module('Controllers',[])
         	$scope.isFileSelected = true;
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
-                var dateString = formatAMPM(new Date());            
                 var DWid = $rootScope.username + "dwid" + Date.now();
-                var image = {
-			      		username : $rootScope.username, 
-			      		userAvatar : $rootScope.userAvatar, 
-			      		hasFile : $scope.isFileSelected , 
-			      		isImageFile : true, 
-			      		istype : "image", 
-			      		showme : true , 
-			      		dwimgsrc : "app/images/gallery_icon5.png", 
-			      		dwid : DWid, 
-			      		msgTime : dateString			      		
-			    };
-                $scope.socket.emit('newMessage',$scope.teamId,image,function (data){       // sending new image message via socket    
-                });
                 var fd = new FormData();
     			fd.append('file', file);
         		fd.append('username', $rootScope.username);
-        		fd.append('userAvatar', $rootScope.userAvatar);
+        		fd.append('userPicture', $rootScope.userPicture);
         		fd.append('hasFile', $scope.isFileSelected);
         		fd.append('isImageFile', true);
 				fd.append('istype', "image");        		
 				fd.append('showme', true);
 				fd.append('dwimgsrc', "app/images/gallery_icon5.png");
 				fd.append('dwid', DWid);
-				fd.append('msgTime', dateString);
+				fd.append('teamModel', $scope.teamModel);
+				fd.append('date', Date.now());
 				fd.append('filename', file.name);
 				$http.post($rootScope.baseUrl +"/v1/uploadImage", fd, {
 		            transformRequest: angular.identity,
 		            headers: { 'Content-Type': undefined }
 		        }).then(function (response) {
-					checkmessagesImage(response);
+					console.log("\o/");
+					console.log(response);
+					$scope.socket.emit('newMessage',$scope.teamId,response.data, function(data){
+						if (data.success == true) {
+							$scope.setFocus = true;				
+						}
+					});
 		        });
-
             }
         }
     };
@@ -498,40 +499,30 @@ angular.module('Controllers',[])
         	$scope.isFileSelected = true;
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
-                var dateString = formatAMPM(new Date());
                 var DWid = $rootScope.username + "dwid" + Date.now();
-                var audio = {
-                		username : $rootScope.username, 
-			      		userAvatar : $rootScope.userAvatar, 
-			      		hasFile : $scope.isFileSelected ,
-			      		isAudioFile : true,
-                		istype : "audio",
-                		showme : false,
-                		dwimgsrc : "app/images/audioplay_icon.png", 
-			      		dwid : DWid, 
-                		msgTime : dateString
-                }		
-
-                $scope.socket.emit('newMessage',$scope.teamId,audio,function (data){		// sending new image message via socket
-                });
                 var fd = new FormData();
     			fd.append('file', file);
         		fd.append('username', $rootScope.username);
-        		fd.append('userAvatar', $rootScope.userAvatar);
+        		fd.append('userPicture', $rootScope.userPicture);
         		fd.append('hasFile', $scope.isFileSelected);
         		fd.append('isAudioFile', true);
 				fd.append('istype', "audio");        		
 				fd.append('showme', false);
 				fd.append('dwimgsrc', "app/images/audioplay_icon.png");
 				fd.append('dwid', DWid);
-				fd.append('msgTime', dateString);
+				fd.append('teamModel', $scope.teamModel);
+				fd.append('date', Date.now());
 				fd.append('filename', file.name);
 				$http.post('/v1/uploadAudio', fd, {
 		            transformRequest: angular.identity,
 		            headers: { 'Content-Type': undefined }
 		        }).then(function (response) {
-					//$scope.socket.emit("newMessage", data);
-		        });    
+					$scope.socket.emit("newMessage", $scope.teamId, response, function(data){
+						if (data.success == true) {
+							$scope.setFocus = true;				
+						}
+					});
+				});    
             }
         }
     };
@@ -644,38 +635,29 @@ angular.module('Controllers',[])
         	$scope.isFileSelected = true;
             for (var i = 0; i < files.length; i++) {
                 var file = files[i];
-                var dateString = formatAMPM(new Date());
                 var DWid = $rootScope.username + "dwid" + Date.now();
-                var PDF = {
-                		username : $rootScope.username, 
-			      		userAvatar : $rootScope.userAvatar, 
-			      		hasFile : $scope.isFileSelected ,
-			      		isPDFFile : true,
-                		istype : "PDF",
-                		showme : false,
-                		dwimgsrc : "app/images/doc_icon.png", 
-			      		dwid : DWid, 
-                		msgTime : dateString
-                }
-                $scope.socket.emit('newMessage',$scope.teamId,PDF,function (data){
-                });
                 var fd = new FormData();
     			fd.append('file', file);
         		fd.append('username', $rootScope.username);
-        		fd.append('userAvatar', $rootScope.userAvatar);
+        		fd.append('userPicture', $rootScope.userPicture);
         		fd.append('hasFile', $scope.isFileSelected);
         		fd.append('isPDFFile', true);
 				fd.append('istype', "PDF");        		
 				fd.append('showme', false);
 				fd.append('dwimgsrc', "app/images/doc_icon.png");
 				fd.append('dwid', DWid);
-				fd.append('msgTime', dateString);
+				fd.append('teamModel', $scope.teamModel);
+				fd.append('date', Date.now());
 				fd.append('filename', file.name);
 				$http.post("/v1/uploadPDF", fd, {
 		            transformRequest: angular.identity,
 		            headers: { 'Content-Type': undefined }
 		        }).then(function (response) {
-		            //console.log(response);
+		            $scope.socket.emit('newMessage',$scope.teamId,response, function(data){
+						if (data.success == true) {
+							$scope.setFocus = true;				
+						}
+					});
 		        });
             }
         }

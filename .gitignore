@@ -11,4 +11,7 @@ mongodb/
 
 #configs
 app/config/config.json
+
+#uploads
+public/app/upload/
 package-lock.json

@@ -5,7 +5,7 @@
     <section class="content">                          
           <div class="row">
             <div class="col-sm-9">
-              <div class="box box-success direct-chat direct-chat-success">
+              <div ng-class="{'box box-success direct-chat direct-chat-success' : teamModel=='Social', 'box box-warning direct-chat direct-chat-warning' : teamModel=='Clinical'}">
               <div class="box-header with-border">
                 <h3 class="box-title">{{ title }}</h3>
                 <div class="box-tools pull-right">
@@ -19,7 +19,7 @@
                 <!-- Conversations are loaded here -->
                 <div class="direct-chat-messages" scroll-bottom="messages">
                   <!-- Message. Default to the left -->
-                  <div ng-repeat="message in messages" ng-class="{'direct-chat-msg' : true, 'right' : message.ownMsg, 'wordwrap' : true}" >
+                  <div ng-repeat="message in messages" ng-class="{'direct-chat-msg' : true, 'right' : message.ownMsg, 'wordwrap' : true}" ng-show="message.teamModel==teamModel">
                     <div class='direct-chat-info clearfix'>
                       <span class='direct-chat-name pull-left'>{{ message.username }}</span>
                       <span class='direct-chat-timestamp pull-right'>{{ message.msgTime }}</span>
@@ -123,7 +123,7 @@
                 <div><p class="user-typing">{{typingMsg}}</p></div>
                 <div class="box-tools pull-right desktop">
                   <!-- Any File Select Button -->
-                  <button class="btn btn-success btn-flat" data-widget="" ngf-select ng-model="Files"><i class="glyphicon glyphicon-paperclip"></i></button>
+                  <button ng-class="{'btn btn-success btn-flat' : teamModel=='Social', 'btn btn-warning btn-flat' : teamModel=='Clinical'}" data-widget="" ngf-select ng-model="Files"><i class="glyphicon glyphicon-paperclip"></i></button>
                 </div>
                 <!-- Text message  -->
                 <form action="" method="post">
@@ -140,7 +140,7 @@
             </div>
             
             <div class="col-sm-3 toggle-contact-list">
-              <div class="box box-success direct-chat direct-chat-success">  
+              <div ng-class="{'box box-success direct-chat direct-chat-success' : teamModel=='Social', 'box box-warning direct-chat direct-chat-warning' : teamModel=='Clinical'}">  
               <div class="box-header with-border">
                 <h3 class="box-title">Team Members</h3>
               </div><!-- /.box-header -->

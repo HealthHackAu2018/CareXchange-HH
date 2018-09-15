@@ -132,13 +132,13 @@ router.post('/v1/uploadImage',function (req, res){
 	});
 
 	form.on('end', function() {
-	res.end();
+	//res.end();
 	});
 	
 	form.parse(req,function(err,fields,files){
 		var data = { 
 				username : fields.username, 
-				userAvatar : fields.userAvatar, 
+				userPicture : fields.userPicture, 
 				repeatMsg : true, 
 				hasFile : fields.hasFile, 
 				isImageFile : fields.isImageFile, 
@@ -147,7 +147,8 @@ router.post('/v1/uploadImage',function (req, res){
 				dwimgsrc : fields.dwimgsrc, 
 				dwid : fields.dwid,
 				serverfilename : base_pub + '/' + baseName(files.file.path), 
-				msgTime : fields.msgTime,
+				teamModel : fields.teamModel,
+				date : fields.date,
 				filename : files.file.name,
 				size : bytesToSize(files.file.size)
 		};
@@ -161,7 +162,7 @@ router.post('/v1/uploadImage',function (req, res){
 		};
 		Upload.create(image_file);
 		files_array.push(image_file);
-		res.send(data);
+		return res.send(data);
 	});
   });
   
@@ -174,8 +175,7 @@ router.post('/v1/uploadImage',function (req, res){
 			uploadDir: __dirname + '../../../public' + base_pub,
 			keepExtensions: true
 		});
-  
-  
+    
 	  form.on('end', function() {
 		res.end();
 	  });
