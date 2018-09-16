@@ -54,7 +54,7 @@ angular.module('Controllers',[])
         $uibModalInstance.dismiss('cancel');
     };
 })
-.controller('teamChatCtrl', function ($scope, $rootScope, $location, $http, $uibModal){		// Chat Page Controller
+.controller('teamChatCtrl', function ($scope, $rootScope, $location, $http, $uibModal, $window){		// Chat Page Controller
 	var url = $location.path().split('/');
 	$scope.teamId = url[2];
 	$scope.socket = io('/teamchat', { transports: ['websocket'] });
@@ -77,7 +77,11 @@ angular.module('Controllers',[])
 
 	$scope.go = function ( path ) {
 		$location.path( path );
-	  };
+	};
+
+	$scope.reloadRoute = function() {
+		$window.location.reload()
+	}
 
 	$scope.openSettingModal = function (size, parentSelector) {
 		console.log("clicked");
@@ -103,9 +107,9 @@ angular.module('Controllers',[])
 		});
 
 		modalInstance.result.then(function (user) {
-		$ctrl.user = user;
-		$rootScope.currentUser = user;
-
+			$ctrl.user = user;
+			$rootScope.currentUser = user;
+			
 		}, function () {
 		//$log.info('Modal dismissed at: ' + new Date());
 		});
@@ -238,7 +242,14 @@ angular.module('Controllers',[])
 		return strTime;
 	}
 	// toggle online member list mobile
- 	$scope.custom = true;
+	 $scope.custom = true;
+	 
+	$scope.toggleModel = function () {
+		if ($scope.teamModel == "Social")
+			$scope.teamModel = "Clinical";
+		else $scope.teamModel = "Social";
+		$scope.$apply();
+	};
     $scope.toggleCustom = function() {
         $scope.custom = $scope.custom === false ? true: false;	
         if(!$scope.custom){

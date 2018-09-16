@@ -7,13 +7,15 @@
             <div class="col-sm-9">
               <div ng-class="{'box box-success direct-chat direct-chat-success' : teamModel=='Social', 'box box-warning direct-chat direct-chat-warning' : teamModel=='Clinical'}">
               <div class="box-header with-border">
-                <h3 class="box-title">{{ title }}</h3>
+                <h3 ng-click="reloadRoute()" class="box-title">{{ title }}</h3>
                 <div class="box-tools pull-right">
-                    <button type="button" class="btn btn-secondary sharp" ng-click="go('/teams')">Back</button>
+                    <button type="button" class="btn btn-danger sharp" ng-click="go('/teams')">Back</button>
                   <!-- Any File Select Button -->
                   <button class="btn btn-box-tool mobile" data-widget="" ngf-select ng-model="Files"><i class="glyphicon glyphicon-paperclip"></i></button>
                   <!-- onlime member list mobile -->
                   <button class="btn btn-box-tool mobile toggle-contact-icon" data-toggle="tooltip" data-widget="chat-pane-toggle" title="Contacts" ng-click="toggleCustom()"><i class="fa fa-comments"></i></button>
+                  <!-- toggle between social and clinicial on mobile -->
+                  <button class="btn btn-box-tool mobile toggle-contact-icon" data-toggle="tooltip" data-widget="chat-pane-toggle" title="Switch" ng-click="toggleModel()"><i class="fa fa-user-md "></i></button>
                 </div>
               </div><!-- /.box-header -->
               <div class="box-body">
@@ -145,7 +147,7 @@
               <div class="box-header with-border">
                 <h3 class="box-title">Team Members</h3>
                 <div class="box-tools pull-right">
-                    <button type="button" class="btn btn-default sharp" ng-click="openSettingModal()">My Profile</button>
+                    <button type="button" class="btn btn-info sharp" ng-click="openSettingModal()">My Profile</button>
                 </div>
                 
               </div><!-- /.box-header -->
