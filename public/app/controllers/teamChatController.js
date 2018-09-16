@@ -75,6 +75,10 @@ angular.module('Controllers',[])
 		$location.path('/login');
 	}
 
+	$scope.go = function ( path ) {
+		$location.path( path );
+	  };
+
 	$scope.openSettingModal = function (size, parentSelector) {
 		console.log("clicked");
 		var $ctrl = this;
@@ -98,8 +102,10 @@ angular.module('Controllers',[])
 		}
 		});
 
-		modalInstance.result.then(function (selectedItem) {
-		$ctrl.selected = selectedItem;
+		modalInstance.result.then(function (user) {
+		$ctrl.user = user;
+		$rootScope.currentUser = user;
+
 		}, function () {
 		//$log.info('Modal dismissed at: ' + new Date());
 		});
@@ -255,6 +261,7 @@ angular.module('Controllers',[])
 			//var dateString = formatAMPM(new Date());
 			$scope.socket.emit("newMessage", $scope.teamId, { 
 				username : $rootScope.username, 
+				name : $rootScope.currentUser.name,
 				userPicture : $rootScope.userPicture, 
 				msg : $scope.chatMsg, 
 				hasMsg : $scope.isMsg , 
@@ -423,7 +430,8 @@ angular.module('Controllers',[])
                 var DWid = $rootScope.username + "dwid" + Date.now();
                 var fd = new FormData();
     			fd.append('file', file);
-        		fd.append('username', $rootScope.username);
+				fd.append('username', $rootScope.username);
+				fd.append('name', $rootScope.currentUser.name);
         		fd.append('userPicture', $rootScope.userPicture);
         		fd.append('hasFile', $scope.isFileSelected);
         		fd.append('isImageFile', true);
@@ -560,7 +568,8 @@ angular.module('Controllers',[])
                 var DWid = $rootScope.username + "dwid" + Date.now();
                 var fd = new FormData();
     			fd.append('file', file);
-        		fd.append('username', $rootScope.username);
+				fd.append('username', $rootScope.username);
+				fd.append('name', $rootScope.currentUser.name);
         		fd.append('userPicture', $rootScope.userPicture);
         		fd.append('hasFile', $scope.isFileSelected);
         		fd.append('isAudioFile', true);
@@ -696,7 +705,8 @@ angular.module('Controllers',[])
                 var DWid = $rootScope.username + "dwid" + Date.now();
                 var fd = new FormData();
     			fd.append('file', file);
-        		fd.append('username', $rootScope.username);
+				fd.append('username', $rootScope.username);
+				fd.append('name', $rootScope.currentUser.name);
         		fd.append('userPicture', $rootScope.userPicture);
         		fd.append('hasFile', $scope.isFileSelected);
         		fd.append('isPDFFile', true);

@@ -94,10 +94,9 @@ router.get('/auth/google/callback', passport.authenticate('google', {
 
 // Teams
 router.get('/teams', [User.isAuthenticated, function(req, res, next) {
-	var user  = req.session.passport.user;
 	Team.find(function(err, teams){
 		if(err) throw err;
-		res.render('teams', { teams, user });
+		res.render('teams', { teams});
 	});
 }]);
 
