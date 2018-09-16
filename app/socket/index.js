@@ -70,18 +70,15 @@ var ioEvents = function(io) {
 						Team.getUsers(newTeam, socket, function(err, users, currentUserInTeam){
 							if(err) throw err;
 
-							// Get the 100 most recent messages from Redis
+							// Get the 1000 most recent messages from Redis
 							var mId = "message_" + teamId;
-							Db.pubClient.lrange(mId, 0, 99, function(err, reply) {
+							Db.pubClient.lrange(mId, 0, 999, function(err, reply) {
 								if(!err) {
 									var result = [];
 									reply.sort(msgDate);
 									// Loop through the list, parsing each item into an object
 									for(var message in reply){
 										message = JSON.parse(reply[message]);
-										message.date      = (new Date(message.date)).toLocaleString();
-										message.username  = message.username;
-										message.content   = message.content;
 										result.push(message);
 									}
 									// Return list of all user connected to the team to the current user
@@ -172,10 +169,10 @@ var ioEvents = function(io) {
 				callback({ success:false});
 				return;
 			}
-			// cache message to redis, trim to 100 records only
+			// cache message to redis, trim to 1000 records only
 			var mId = "message_" + teamId;
 			Db.pubClient.lpush(mId, JSON.stringify(message));
-			Db.pubClient.ltrim(mId, 0, 99);						
+			Db.pubClient.ltrim(mId, 0, 999);					
 		});
 
 	});

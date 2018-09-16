@@ -146,7 +146,7 @@ router.post('/v1/uploadImage',function (req, res){
 				showme : fields.showme, 
 				dwimgsrc : fields.dwimgsrc, 
 				dwid : fields.dwid,
-				serverfilename : base_pub + '/' + baseName(files.file.path), 
+				serverfilename : base_pub + '/' + baseName(files.file.path),
 				teamModel : fields.teamModel,
 				date : fields.date,
 				filename : files.file.name,
@@ -183,19 +183,20 @@ router.post('/v1/uploadImage',function (req, res){
 		  console.log("files : ",files);
 		  console.log("fields : ", fields);
 		  var data = { 
-				  username : fields.username, 
-				  userAvatar : fields.userAvatar, 
-				  repeatMsg : true, 
-				  hasFile : fields.hasFile, 
-				  isAudioFile : fields.isAudioFile, 
-				  istype : fields.istype, 
-				  showme : fields.showme, 
-				  dwimgsrc : fields.dwimgsrc, 
-				  dwid : fields.dwid,
-				  serverfilename : base_pub + '/' + baseName(files.file.path), 
-				  msgTime : fields.msgTime,
-				  filename : files.file.name,
-				  size : bytesToSize(files.file.size)
+				username : fields.username, 
+				userAvatar : fields.userAvatar, 
+				repeatMsg : true, 
+				hasFile : fields.hasFile, 
+				isAudioFile : fields.isAudioFile, 
+				istype : fields.istype, 
+				showme : fields.showme, 
+				dwimgsrc : fields.dwimgsrc, 
+				dwid : fields.dwid,
+				serverfilename : base_pub + '/' + baseName(files.file.path), 
+				teamModel : fields.teamModel,
+				date : fields.date,
+				filename : files.file.name,
+				size : bytesToSize(files.file.size)
 		  };
 		  var audio_file = { 
 				  dwid : fields.dwid,
@@ -224,19 +225,20 @@ router.post('/v1/uploadImage',function (req, res){
 	  });
 	  form.parse(req,function(err,fields,files){
 		  var data = { 
-				  username : fields.username, 
-				  userAvatar : fields.userAvatar, 
-				  repeatMsg : true, 
-				  hasFile : fields.hasFile, 
-				  isPDFFile : fields.isPDFFile, 
-				  istype : fields.istype, 
-				  showme : fields.showme, 
-				  dwimgsrc : fields.dwimgsrc, 
-				  dwid : fields.dwid,
-				  serverfilename : base_pub + '/' + baseName(files.file.path), 
-				  msgTime : fields.msgTime,
-				  filename : files.file.name,
-				  size : bytesToSize(files.file.size)
+				username : fields.username, 
+				userAvatar : fields.userAvatar, 
+				repeatMsg : true, 
+				hasFile : fields.hasFile, 
+				isPDFFile : fields.isPDFFile, 
+				istype : fields.istype, 
+				showme : fields.showme, 
+				dwimgsrc : fields.dwimgsrc, 
+				dwid : fields.dwid,
+				serverfilename : base_pub + '/' + baseName(files.file.path), 
+				teamModel : fields.teamModel,
+				date : fields.date,
+				filename : files.file.name,
+				size : bytesToSize(files.file.size)
 		  };
 		  var pdf_file = { 
 				  dwid : fields.dwid,

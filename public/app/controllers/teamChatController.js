@@ -143,10 +143,13 @@ angular.module('Controllers',[])
 					}else{
 						msg.ownMsg = false;
 					}
+
 					msg.msgTime = formatAMPM(new Date(msg.date));
+					if (msg.msgTime == '12:NaN am')
+						msg.msgTime = formatAMPM(ConvertToDatetime(msg.date));
 					$scope.messages.push(msg);
 				}
-			}		
+			}
 		}
 		//else if ($scope.users.indexOf(data) == -1) $scope.users.push(data);
 		$scope.$apply();
@@ -267,15 +270,24 @@ angular.module('Controllers',[])
 				}
 			});	
 		}
-    };
+	};
+	
+	function ConvertToDatetime(dateValue) {
+		var regex = /-?\d+/;
+		  var match = regex.exec(dateValue);
+		  if (match != null)
+			  return new Date(parseInt(match[0]));
+		  else return "";
+	  }
     
     // recieving new image message
     $scope.socket.on("addImageMessage", function(data){
 		$scope.showme = true;
-		data.msgTime = formatAMPM(new Date(data.date));
+		console.log("addIM");
+		console.log(data);
+		data.msgTime = formatAMPM(ConvertToDatetime(data.date));
 		if(data.username == $rootScope.username){
-			//data.ownMsg = true;	
-			data.ownMsg = false;
+			data.ownMsg = true;	
 			//data.dwimgsrc = "app/images/spin.gif";	
 		}else{
 			data.ownMsg = false;
@@ -286,6 +298,7 @@ angular.module('Controllers',[])
 		}else{
 			$scope.messages.push(data);
 		}
+		$scope.$apply();
 	});
 
 	// replacing spinning wheel in sender message after image message delivered to everyone.
@@ -336,7 +349,8 @@ angular.module('Controllers',[])
 							console.log(search_id);
 					    	if(!response.isExpired){
 					    		var linkID = "#" + search_id + "A";
-					    		$(linkID).find('i').click();
+								//$(linkID).find('i').click();
+								$(linkID).click();
 					    		return true;
 					    	}else{
 					    		var html = '<p id="alert">'+ response.expmsg +'</p>';
