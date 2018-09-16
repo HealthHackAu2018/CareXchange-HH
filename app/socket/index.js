@@ -4,6 +4,7 @@ var config 	= require('../config');
 var adapter = require('socket.io-redis');
 
 var Team = require('../models/team');
+var User = require('../models/user');
 var Db = require('../database');
 
 /**
@@ -131,11 +132,27 @@ var ioEvents = function(io) {
 			});
 		});
 
+		// When a profile update is submitted
+		socket.on('updateUser', function(user, callback){
+			var userId = socket.request.session.passport.user;
+			if (userId != user._id){
+				callback({ success:false});
+			}else{
+				User.findByIdAndUpdate(userId,user, 
+				}); 
+			}
+		});
+
 		// When a user is typing..
 		socket.on('typing', function(teamId, callback) {
-			var userId = socket.request.session.passport.user;
-			socket.emit('notifyTyping', userId);
-			socket.broadcast.to(teamId).emit('notifyTyping', userId);
+			try {
+				var userId = socket.request.session.passport.user;
+				socket.emit('notifyTyping', userId);
+				socket.broadcast.to(teamId).emit('notifyTyping', userId);
+			}
+			catch(err){
+			}
+			
 		});
 
 		// When a user is empty..
