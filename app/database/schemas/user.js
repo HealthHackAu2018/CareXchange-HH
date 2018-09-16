@@ -19,7 +19,11 @@ var UserSchema = new Mongoose.Schema({
     username: { type: String, required: true},
     password: { type: String, default: null },
     socialId: { type: String, default: null },
-    picture:  { type: String, default:  DEFAULT_USER_PICTURE}
+    picture:  { type: String, default:  DEFAULT_USER_PICTURE},
+    role: { type: String, default: null },
+    speciality: { type: String, default: null },
+    location: { type: String, default: null },
+    name: { type: String, required: true }
 });
 
 /**

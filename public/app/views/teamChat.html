@@ -1,5 +1,5 @@
 <!-- Full Width Column -->
-<div class="content-wrapper" style="overflow:hidden;height:100%">
+<div class="content-wrapper modal-parent" style="overflow:hidden;height:100%">
   <div class="container">
     <!-- Main content -->
     <section class="content">                          
@@ -143,6 +143,7 @@
               <div ng-class="{'box box-success direct-chat direct-chat-success' : teamModel=='Social', 'box box-warning direct-chat direct-chat-warning' : teamModel=='Clinical'}">  
               <div class="box-header with-border">
                 <h3 class="box-title">Team Members</h3>
+                <button type="button" class="btn btn-default" ng-click="openSettingModal()">Open me!</button>
               </div><!-- /.box-header -->
               <div class="box-body">
                 <!-- Contacts are loaded here -->

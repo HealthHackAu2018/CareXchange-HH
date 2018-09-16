@@ -1,4 +1,4 @@
-var App = angular.module('CareXchange',['ngResource','ngRoute','ngAnimate','ngStorage','ui.bootstrap','socket.io','ngFileUpload','Controllers','Services'])
+var App = angular.module('CareXchange',['ngResource','ngRoute','ngAnimate','ngStorage','ui.bootstrap','socket.io','ngFileUpload','Controllers'])
 .run(["$rootScope", function ($rootScope){
 	$rootScope.baseUrl = 'http://localhost:3000'; //Application URL
 }]);

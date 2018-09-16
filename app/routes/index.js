@@ -41,9 +41,9 @@ router.post('/login', passport.authenticate('local', {
 // Register via username and password
 router.post('/register', function(req, res, next) {
 
-	var credentials = {'username': req.body.username, 'password': req.body.password };
+	var credentials = {'name': req.body.name, 'username': req.body.username, 'password': req.body.password };
 
-	if(credentials.username === '' || credentials.password === ''){
+	if(credentials.name === '' || credentials.username === '' || credentials.password === ''){
 		req.flash('error', 'Missing credentials');
 		req.flash('showRegisterForm', true);
 		res.redirect('/');
@@ -94,9 +94,10 @@ router.get('/auth/google/callback', passport.authenticate('google', {
 
 // Teams
 router.get('/teams', [User.isAuthenticated, function(req, res, next) {
+	var user  = req.session.passport.user;
 	Team.find(function(err, teams){
 		if(err) throw err;
-		res.render('teams', { teams });
+		res.render('teams', { teams, user });
 	});
 }]);
 
