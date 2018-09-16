@@ -1,0 +1,21 @@
+<div class="modal-header">
+        <h3 class="modal-title" id="modal-title">User Settings</h3>
+    </div>
+    <div class="modal-body" id="modal-body">
+        <form>
+            <div class="form-group">
+                <label for="userName">Name:</label>
+                <input type="text" class="form-control" id="userName" ng-model="$ctrl.user.name"/>
+                <label for="userRole">Role:</label>
+                <input type="text" class="form-control" id="userRole" name="role" ng-model="$ctrl.user.role"/>
+                <label for="userSpeciality">Speciality:</label>
+                <input type="text" class="form-control" id="userSpeciality" name="speciality" ng-model="$ctrl.user.speciality"/>
+                <label for="userLocation">Location:</label>
+                <input type="text" class="form-control" id="userLocation" name="location" ng-model="$ctrl.user.location"/>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">Save</button>
+        <button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Cancel</button>
+    </div>

@@ -40,7 +40,21 @@ angular.module('Controllers',[])
         }
     };
 })
-.controller('teamChatCtrl', function ($scope, $rootScope, $location, $http, Upload, $timeout, sendImageService){		// Chat Page Controller
+.controller('userSettingCtrl', function ($uibModalInstance, user) {
+    var $ctrl = this;
+	$ctrl.user = user;
+	console.log("USC");
+	console.log(user);
+
+    $ctrl.ok = function () {
+        $uibModalInstance.close($ctrl.user);
+    };
+    
+    $ctrl.cancel = function () {
+        $uibModalInstance.dismiss('cancel');
+    };
+})
+.controller('teamChatCtrl', function ($scope, $rootScope, $location, $http, $uibModal){		// Chat Page Controller
 	var url = $location.path().split('/');
 	$scope.teamId = url[2];
 	$scope.socket = io('/teamchat', { transports: ['websocket'] });
@@ -60,6 +74,36 @@ angular.module('Controllers',[])
 	if(!$rootScope.loggedIn){
 		$location.path('/login');
 	}
+
+	$scope.openSettingModal = function (size, parentSelector) {
+		console.log("clicked");
+		var $ctrl = this;
+		$ctrl.user = $rootScope.currentUser;
+		  
+		var parentElem = parentSelector ? 
+		angular.element($document[0].querySelector('.modal-parent ' + parentSelector)) : undefined;
+		var modalInstance = $uibModal.open({
+		animation: $ctrl.animationsEnabled,
+		ariaLabelledBy: 'modal-title',
+		ariaDescribedBy: 'modal-body',
+		templateUrl: 'app/views/userSettingsModal.html',
+		controller: 'userSettingCtrl',
+		controllerAs: '$ctrl',
+		size: size,
+		appendTo: parentElem,
+		resolve: {
+			user: function () {
+			return $ctrl.user;
+			}
+		}
+		});
+
+		modalInstance.result.then(function (selectedItem) {
+		$ctrl.selected = selectedItem;
+		}, function () {
+		//$log.info('Modal dismissed at: ' + new Date());
+		});
+	};
 
 	$scope.updateMode = function() {
 		console.log($scope.teamModel);
