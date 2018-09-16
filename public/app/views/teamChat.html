@@ -37,7 +37,7 @@
                                   <a href ng-click="openClickImage(message)" ng-show="message.showme" >
                               <img id="{{message.dwid}}" width="50" height="50" ng-src="{{message.dwimgsrc}}" alt="Open Image"></a> <!-- Open Icon -->
                               
-                              <a ng-href="{{message.serverfilename}}" data-lightbox="{{message.dwid}}" data-title="{{message.filename}}" ng-hide="message.showme">
+                              <a ng-href="{{message.serverfilename}}" data-lightbox="{{message.dwid}}A" data-title="{{message.filename}}" ng-hide="message.showme">
                                 <img ng-class="{'multiple-borders-white' : message.ownMsg,'multiple-borders-black' : !message.ownMsg}" id="{{message.dwid+1}}" width="90" height="70" ng-src="{{message.serverfilename}}" alt="Image File"> <!-- Image -->
                               </a>
                                 </div>
@@ -45,18 +45,18 @@
                                   <span class="decs-text"><b>File :</b> {{ message.filename}}</span>
                                   <span class="decs-text"><b>Size :</b> {{message.size}}</span>
                                   <span class="decs-text">
-                                    <a id ="{{message.dwid}}" class="decs-text" ng-show="message.ownMsg"  onclick="return angular.element(this).scope().downloadImage(event,this)" href ><i class="fa fa-download dw-icon"></i> <i>Click here to open</i></a>
-                                  <a id ="{{message.dwid}}" class="decs-text" ng-show="!message.ownMsg"  onclick="return angular.element(this).scope().downloadImage(event,this)" href ><i>Click here to open</i> <i class="fa fa-download dw-icon"></i></a>
-                                  <a id ="{{message.dwid}}A" class="decs-text hidden-link" href="{{ message.serverfilename }}"  download="{{ message.serverfilename }}"><i>Hidden Link</i></a>  
+                                    <a id ="{{message.dwid}}" class="decs-text" ng-show="message.ownMsg"  onclick="return angular.element(this).scope().downloadImage(event,this)" href ><i class="fa fa-eye dw-icon"></i> <i>Click here to view</i></a>
+                                  <a id ="{{message.dwid}}" class="decs-text" ng-show="!message.ownMsg"  onclick="return angular.element(this).scope().downloadImage(event,this)" href ><i>Click here to view</i> <i class="fa fa-eye dw-icon"></i></a>
+                                  <a id ="{{message.dwid}}A" class="decs-text hidden-link" href="{{ message.serverfilename }}"  data-lightbox="{{ message.dwid }}B" data-title="{{ message.filename }}">HL</a>  
                                   </span>
                                 </div>
                                 <div ng-class="{'attachment-msg-right' : message.ownMsg, 'attachment-msg-left' : !message.ownMsg}" ng-if="(message.dwimgsrc !== 'app/images/spin.gif')" ng-show="message.showme">
                                   <span class="decs-text"><b>File :</b> {{ message.filename}}</span>
                                   <span class="decs-text"><b>Size :</b> {{message.size}}</span>
                                   <span class="decs-text">
-                                    <a id ="{{message.dwid}}" class="decs-text" ng-show="message.ownMsg"  onclick="return angular.element(this).scope().downloadImage(event,this)" href ><i class="fa fa-download dw-icon"></i> <i>Click here to open</i></a>
-                                  <a id ="{{message.dwid}}" class="decs-text" ng-show="!message.ownMsg"  onclick="return angular.element(this).scope().downloadImage(event,this)" href ><i>Click here to open</i> <i class="fa fa-download dw-icon"></i></a>
-                                  <a id ="{{message.dwid}}A" class="decs-text hidden-link" href="{{ message.serverfilename }}"  download="{{ message.serverfilename }}"><i>Hidden Link</i></a>  
+                                    <a id ="{{message.dwid}}" class="decs-text" ng-show="message.ownMsg"  onclick="return angular.element(this).scope().downloadImage(event,this)" href ><i class="fa fa-eye dw-icon"></i> <i>Click here to view</i></a>
+                                  <a id ="{{message.dwid}}" class="decs-text" ng-show="!message.ownMsg"  onclick="return angular.element(this).scope().downloadImage(event,this)" href ><i>Click here to view</i> <i class="fa fa-eye dw-icon"></i></a>
+                                  <a id ="{{message.dwid}}A" class="decs-text hidden-link" href="{{ message.serverfilename }}" data-lightbox="{{ message.dwid }}C" data-title="{{ message.filename }}"><i>Hidden Link</i></a>  
                                   </span>
                                 </div>
                               </div>
@@ -72,8 +72,8 @@
                               <div ng-class="{'attachment-msg-right' : message.ownMsg, 'attachment-msg-left' : !message.ownMsg}">
                                 <span class="decs-text" ng-show="message.showme"><b>File :</b> {{ message.filename}}</span>
                                 <span class="decs-text" ng-show="message.showme"><b>Size :</b> {{message.size}}</span>
-                                <span class="decs-text" ng-show="message.showme"><a id ="{{message.dwid}}" class="decs-text" ng-show="message.ownMsg" onclick="return angular.element(this).scope().downloadAudio(event,this)" href ><i class="fa fa-download dw-icon"></i> <i>Click here to open</i></a>
-                                <a id ="{{message.dwid}}" class="decs-text" ng-show="!message.ownMsg" onclick="return angular.element(this).scope().downloadAudio(event,this)" href ><i>Click here to open</i> <i class="fa fa-download dw-icon"></i></a>
+                                <span class="decs-text" ng-show="message.showme"><a id ="{{message.dwid}}" class="decs-text" ng-show="message.ownMsg" onclick="return angular.element(this).scope().downloadAudio(event,this)" href ><i class="fa fa-eye dw-icon"></i> <i>Click here to view</i></a>
+                                <a id ="{{message.dwid}}" class="decs-text" ng-show="!message.ownMsg" onclick="return angular.element(this).scope().downloadAudio(event,this)" href ><i>Click here to view</i> <i class="fa fa-eye dw-icon"></i></a>
                                 <a id ="{{message.dwid}}A" class="decs-text hidden-link" href="{{ message.serverfilename }}"  download="{{ message.serverfilename }}"><i>Hidden Link</i></a></span>
                               </div>
                             </div><!-- Audio File Close -->
@@ -87,8 +87,8 @@
                               <div ng-class="{'attachment-msg-right' : message.ownMsg, 'attachment-msg-left' : !message.ownMsg}">
                                 <span class="decs-text" ng-show="message.showme"><b>File :</b> {{ message.filename}}</span>
                                 <span class="decs-text" ng-show="message.showme"><b>Size :</b> {{message.size}}</span>
-                                <span class="decs-text" ng-show="message.showme"><a id ="{{message.dwid}}" class="decs-text" ng-show="message.ownMsg"  onclick="return angular.element(this).scope().downloadPDF(event,this)" href><i class="fa fa-download dw-icon"></i> <i>Click here to open</i></a>
-                                <a id ="{{message.dwid}}" class="decs-text" ng-show="!message.ownMsg"  onclick="return angular.element(this).scope().downloadPDF(event,this)" href><i>Click here to open</i> <i class="fa fa-download dw-icon"></i></a>
+                                <span class="decs-text" ng-show="message.showme"><a id ="{{message.dwid}}" class="decs-text" ng-show="message.ownMsg"  onclick="return angular.element(this).scope().downloadPDF(event,this)" href><i class="fa fa-eye dw-icon"></i> <i>Click here to view</i></a>
+                                <a id ="{{message.dwid}}" class="decs-text" ng-show="!message.ownMsg"  onclick="return angular.element(this).scope().downloadPDF(event,this)" href><i>Click here to view</i> <i class="fa fa-eye dw-icon"></i></a>
                                 <a id ="{{message.dwid}}A" class="decs-text hidden-link" href="{{ message.serverfilename }}"  download="{{ message.serverfilename }}"><i>Hidden Link</i></a>  
                                 </span>
                               </div>
