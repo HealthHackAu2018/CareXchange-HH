@@ -138,6 +138,7 @@ router.post('/v1/uploadImage',function (req, res){
 	form.parse(req,function(err,fields,files){
 		var data = { 
 				username : fields.username, 
+				name: fields.name,
 				userPicture : fields.userPicture, 
 				repeatMsg : true, 
 				hasFile : fields.hasFile, 
