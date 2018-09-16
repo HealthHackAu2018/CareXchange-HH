@@ -9,6 +9,7 @@
               <div class="box-header with-border">
                 <h3 class="box-title">{{ title }}</h3>
                 <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-secondary sharp" ng-click="go('/teams')">Back</button>
                   <!-- Any File Select Button -->
                   <button class="btn btn-box-tool mobile" data-widget="" ngf-select ng-model="Files"><i class="glyphicon glyphicon-paperclip"></i></button>
                   <!-- onlime member list mobile -->
@@ -21,7 +22,7 @@
                   <!-- Message. Default to the left -->
                   <div ng-repeat="message in messages" ng-class="{'direct-chat-msg' : true, 'right' : message.ownMsg, 'wordwrap' : true}" ng-show="message.teamModel==teamModel">
                     <div class='direct-chat-info clearfix'>
-                      <span class='direct-chat-name pull-left'>{{ message.username }}</span>
+                      <span class='direct-chat-name pull-left'>{{ message.name }}</span>
                       <span class='direct-chat-timestamp pull-right'>{{ message.msgTime }}</span>
                     </div><!-- /.direct-chat-info -->
                     <img class="direct-chat-img" ng-src="{{message.userPicture}}" alt="message user image" /><!-- /.direct-chat-img -->
@@ -108,7 +109,7 @@
                           <a href>
                             <img class='contacts-list-img' ng-src='app/css/dist/img/{{user.userAvatar}}'/>
                             <div class='contacts-list-info'>
-                                <span class="ol-memeber-name" style="line-height:2.6; padding:5px; font-weight : 600; color : #333;">{{ user.username }}</span>
+                                <span class="ol-memeber-name" style="line-height:2.6; padding:5px; font-weight : 600; color : #333;">{{ user.name }}</span>
                             </div><!-- /.contacts-list-info -->
                           </a>
                         </li><!-- End Contact Item -->
@@ -143,7 +144,10 @@
               <div ng-class="{'box box-success direct-chat direct-chat-success' : teamModel=='Social', 'box box-warning direct-chat direct-chat-warning' : teamModel=='Clinical'}">  
               <div class="box-header with-border">
                 <h3 class="box-title">Team Members</h3>
-                <button type="button" class="btn btn-default" ng-click="openSettingModal()">Open me!</button>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-default sharp" ng-click="openSettingModal()">My Profile</button>
+                </div>
+                
               </div><!-- /.box-header -->
               <div class="box-body">
                 <!-- Contacts are loaded here -->
@@ -153,7 +157,7 @@
                       <a href="/user/{{user._id}}">
                         <img class='contacts-list-img' ng-src='{{user.picture}}'/>
                         <div class='contacts-list-info'>
-                            <span class="ol-memeber-name" style="line-height:2.6; padding:5px; font-weight : 600; color : #333;">{{ user.username }}</span>
+                            <span class="ol-memeber-name" style="line-height:2.6; padding:5px; font-weight : 600; color : #333;">{{ user.name }}</span>
                         </div><!-- /.contacts-list-info -->
                       </a>
                     </li><!-- End Contact Item -->
@@ -161,8 +165,8 @@
                 </div><!--/.direct-chat-messages-->
               </div><!-- /.box-body -->
               <div class="btn-group btn-group-toggle btn-group-justified">
-                <label class="btn btn-success btn-lg" ng-click="updateMode()" ng-model="teamModel" uib-btn-radio="'Social'">Social</label>
-                <label class="btn btn-warning btn-lg" ng-click="updateMode()" ng-model="teamModel" uib-btn-radio="'Clinical'">Clinical</label>
+                <label class="btn btn-success btn-lg sharp" ng-click="updateMode()" ng-model="teamModel" uib-btn-radio="'Social'">Social</label>
+                <label class="btn btn-warning btn-lg sharp" ng-click="updateMode()" ng-model="teamModel" uib-btn-radio="'Clinical'">Clinical</label>
               </div>
             </div><!-- /.box -->
           </div>       
