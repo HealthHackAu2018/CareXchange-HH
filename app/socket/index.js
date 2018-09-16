@@ -133,15 +133,15 @@ var ioEvents = function(io) {
 		});
 
 		// When a profile update is submitted
-		socket.on('updateUser', function(user, callback){
-			var userId = socket.request.session.passport.user;
-			if (userId != user._id){
-				callback({ success:false});
-			}else{
-				User.findByIdAndUpdate(userId,user, 
-				}); 
-			}
-		});
+		// socket.on('updateUser', function(user, callback){
+		// 	var userId = socket.request.session.passport.user;
+		// 	if (userId != user._id){
+		// 		callback({ success:false});
+		// 	}else{
+		// 		User.findByIdAndUpdate(userId,user, 
+		// 		}); 
+		// 	}
+		// });
 
 		// When a user is typing..
 		socket.on('typing', function(teamId, callback) {
