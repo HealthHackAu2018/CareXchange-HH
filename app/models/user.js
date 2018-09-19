@@ -31,7 +31,8 @@ var findOrCreate = function(data, callback){
 			return callback(err, user);
 		} else {
 			var userData = {
-				username: data.displayName,
+				name: data.displayName,
+				username: data.id,
 				socialId: data.id,
 				picture: data.photos[0].value || null
 			};
