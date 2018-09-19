@@ -54,6 +54,7 @@ var init = function(){
 	// In case of Facebook, tokenA is the access token, while tokenB is the refersh token.
 	// In case of Twitter, tokenA is the token, whilet tokenB is the tokenSecret.
 	var verifySocialAccount = function(tokenA, tokenB, data, done) {
+		data.name = data.username;
 		User.findOrCreate(data, function (err, user) {
 	      	if (err) { return done(err); }
 			return done(err, user); 
@@ -62,6 +63,7 @@ var init = function(){
 
 	var verifyGoogleAccount = function(request, accessToken, refreshToken, profile, done) {
 		console.log(profile);
+		profile.name = profile.username;
 		User.findOrCreate(profile, function (err, user) {
 			if (err) { return done(err); }
 		return done(err, user); 

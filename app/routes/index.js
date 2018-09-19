@@ -280,12 +280,12 @@ router.post('/v1/uploadImage',function (req, res){
 				  isExpired : true,
 				  expmsg : "File has expired."
 				  };
-				  fs.unlink(req_file_data.serverfilepath, function(err){
-						 if (err) {
-							 return console.error(err);
-					  }
-						  res.send(deletedfileinfo);           
-				  });
+				//   fs.unlink(req_file_data.serverfilepath, function(err){ // 500 error; need to finish code!
+				// 		 if (err) {
+				// 			 return console.error(err);
+				// 	  }
+				// 		  res.send(deletedfileinfo);           
+				//   });
 				 var index = files_array.indexOf(req_file_data);
 				 files_array.splice(index,1);           
 		  }else{

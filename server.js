@@ -12,7 +12,7 @@ var routes 		= require('./app/routes');
 var session 	= require('./app/session');
 var passport    = require('./app/auth');
 var ioServer 	= require('./app/socket')(app);
-//var logger 		= require('./app/logger');
+var logger 		= require('./app/logger');
 
 // Set the port number
 var port = process.env.PORT || 3000;

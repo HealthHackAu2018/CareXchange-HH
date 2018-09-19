@@ -1,0 +1,33 @@
+{
+	"db": {
+		"username": "",
+		"password": "",
+		"host": "localhost",
+		"port": "27017",
+		"name": "carexchange"
+	},
+	"sessionSecret": "",
+	"facebook": {
+		"clientID": "",
+		"clientSecret": "",
+		"callbackURL": "/auth/facebook/callback",
+		"profileFields": ["id", "displayName", "photos"]
+	},
+	"twitter": {
+		"consumerKey": "",
+		"consumerSecret": "",
+		"callbackURL": "/auth/twitter/callback",
+		"profileFields": ["id", "displayName", "photos"]
+	},
+	"google": {
+		"clientID": "",
+		"clientSecret": "",
+		"callbackURL": "/auth/google/callback",
+		"passReqToCallback" : true
+	},
+	"redis": {
+		"host": "127.0.0.1",
+		"port": 6379,
+		"password": ""
+	}
+}

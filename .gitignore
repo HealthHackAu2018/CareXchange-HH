@@ -1,5 +1,6 @@
 # Node Dependencies
 node_modules
+package-lock.json
 
 # Logs
 error.log
@@ -7,11 +8,10 @@ combined.log
 
 # Dbs
 dump.rdp
-mongodb/
+mongodb
 
 #configs
 app/config/config.json
 
 #uploads
-public/app/upload/
-package-lock.json
+public/app/upload

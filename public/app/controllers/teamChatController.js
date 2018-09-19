@@ -56,6 +56,7 @@ angular.module('Controllers',[])
 })
 .controller('teamChatCtrl', function ($scope, $rootScope, $location, $http, $uibModal, $window){		// Chat Page Controller
 	var url = $location.path().split('/');
+	$rootScope.baseUrl = new $window.URL($location.absUrl()).origin;
 	$scope.teamId = url[2];
 	$scope.socket = io('/teamchat', { transports: ['websocket'] });
 	$scope.isMsgBoxEmpty = false;

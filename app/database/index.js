@@ -2,7 +2,6 @@
 
 var config 		= require('../config');
 var Mongoose 	= require('mongoose');
-var logger 		= require('../logger');
 
 // Connect to the database
 // construct the database URI and encode username and password.
@@ -37,9 +36,9 @@ var subClient = redis(port, host, { auth_pass: password, return_buffers: true, }
 
 module.exports = { Mongoose, pubClient, subClient,
 	models: {
-		user: require('./schemas/user.js'),
+		user: require('./schemas/user'),
 		team: require('./schemas/team'),
-		message: require('./schemas/message.js'),
+		message: require('./schemas/message'),
 		upload: require('./schemas/upload')
 	}
 };
