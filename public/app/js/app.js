@@ -1,10 +1,7 @@
-var App = angular.module('CareXchange',['ngResource','ngRoute','ngAnimate','ngStorage','ui.bootstrap','socket.io','ngFileUpload','Controllers'])
-.run(["$rootScope", function ($rootScope){
-	$rootScope.baseUrl = 'http://localhost:3000'; //Application URL
-}]);
-App.config(function ($routeProvider, $socketProvider){
-	//$socketProvider.setConnectionUrl('/teamchat'); // Socket URL
+var App = angular.module('CareXchange',['ngResource','ngRoute','ngAnimate',
+'ngStorage','ui.bootstrap','socket.io','ngFileUpload','Controllers']);
 
+App.config(function ($routeProvider, $socketProvider){
 	$routeProvider	// AngularJS Routes
 	.when('/team/:team_id', {
 		templateUrl: 'app/views/teamChat.html',
