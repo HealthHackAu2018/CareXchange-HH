@@ -10,7 +10,7 @@ var Mongoose  = require('mongoose');
 var TeamSchema = new Mongoose.Schema({
     title: { type: String, required: true },
     connections: { type: [{ userId: String, socketId: String }]},
-    users: { type: [{ userId: String }]}
+    users: { type: [{ userId: String, role: String }]}
 });
 
 var teamModel = Mongoose.model('team', TeamSchema);

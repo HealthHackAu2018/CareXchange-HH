@@ -12,7 +12,7 @@ var routes 		= require('./app/routes');
 var session 	= require('./app/session');
 var passport    = require('./app/auth');
 var ioServer 	= require('./app/socket')(app);
-//var logger 		= require('./app/logger');
+var logger 		= require('./app/logger');
 
 // Set the port number
 var port = process.env.PORT || 3000;
@@ -41,7 +41,7 @@ app.use(function(req, res, next) {
 //static file configuration
 app.use(express.static(__dirname + '/public'));
 app.use(express.static(__dirname + '/public/app/upload/images'));
-app.use(express.static(__dirname + '/public/app/upload/music'));
+app.use(express.static(__dirname + '/public/app/upload/audio'));
 app.use(express.static(__dirname + '/public/app/upload/doc'));
 
 ioServer.listen(port);

@@ -5,6 +5,10 @@ body {
 	background: #C5DDEB;
 }
 
+.btn.sharp {
+	border-radius:0;
+  }
+
 /* ============================= login page =============================*/
 .avatar{
 	height : 65px; 
